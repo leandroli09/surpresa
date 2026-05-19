@@ -740,7 +740,8 @@ export default function App() {
         <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 220, background: `linear-gradient(to bottom, transparent, ${bg})`, pointerEvents: 'none', zIndex: 2 }} />
       </section>
 
-      {entered && (
+      {entered ? (
+      <>
       {/* ══════════════════════════════════════════
           CONTADOR AO VIVO
       ══════════════════════════════════════════ */}
@@ -1094,8 +1095,9 @@ export default function App() {
         </p>
       </footer>
 
-      )}
+</>
+) : null}
 
-    </div>
-  )
+</div>
+)
 }
