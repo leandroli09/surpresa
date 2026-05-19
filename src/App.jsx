@@ -15,8 +15,8 @@ const CONFIG = {
   nomeDela: 'Nome Dela',
 
   // Data de início do namoro (YYYY-MM-DD)
-  dataAniversario: '2024-05-30',
-  dataExibicao: '30 de Maio de 2024',
+  dataAniversario: '2025-05-31',
+  dataExibicao: '31 de Maio de 2025',
 
   // Música — coloque o arquivo em /src/assets/musica.mp3
   musicaUrl: './assets/musica.mp3',
@@ -91,7 +91,10 @@ const GLOBAL_STYLES = `
   @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,500&family=Montserrat:wght@300;400;500;600&family=Great+Vibes&display=swap');
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
+  html {
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+  }
 
   body {
     background: #080608;
@@ -553,6 +556,7 @@ function Lightbox({ src, onClose }) {
 // Componente principal
 // ─────────────────────────────────────────────────────────────
 export default function App() {
+  const [entered, setEntered] = useState(false)
   const t = useCountup(CONFIG.dataAniversario)
   const [lightbox, setLightbox] = useState(null)
 
@@ -590,7 +594,16 @@ export default function App() {
   )
 
   return (
-    <div style={{ background: bg, color: cream, minHeight: '100vh', overflowX: 'hidden' }}>
+    <div
+      style={{
+        background: bg,
+        color: cream,
+        minHeight: '100vh',
+        overflowX: 'hidden',
+        overflowY: entered ? 'auto' : 'hidden',
+        height: entered ? 'auto' : '100vh',
+      }}
+    >
       <style>{GLOBAL_STYLES}</style>
       <div className="grain-overlay" />
 
@@ -611,6 +624,11 @@ export default function App() {
           position: 'relative',
           overflow: 'hidden',
           background: `radial-gradient(ellipse at 50% 60%, #1c0808 0%, ${bg} 70%)`,
+          transition: 'all 1.2s ease',
+          opacity: entered ? 0 : 1,
+          transform: entered ? 'scale(1.1)' : 'scale(1)',
+          filter: entered ? 'blur(12px)' : 'blur(0px)',
+          pointerEvents: entered ? 'none' : 'all',
         }}
       >
         <FloatingPetals count={28} />
@@ -651,7 +669,7 @@ export default function App() {
           <h1
             style={{
               fontFamily: 'Great Vibes, cursive',
-              fontSize: 'clamp(64px, 13vw, 150px)',
+              fontSize: 'clamp(52px, 14vw, 140px)',
               lineHeight: 1.05,
               marginBottom: 16,
               animation: 'fadeInUp 1s ease 0.4s both',
@@ -668,7 +686,7 @@ export default function App() {
           <h2
             style={{
               fontFamily: 'Cormorant Garamond, serif',
-              fontSize: 'clamp(18px, 3vw, 34px)',
+              fontSize: 'clamp(18px, 5vw, 34px)',
               fontWeight: 300,
               fontStyle: 'italic',
               color: 'rgba(245,230,211,0.65)',
@@ -684,9 +702,18 @@ export default function App() {
             <span className="heartbeat" style={{ fontSize: 52, display: 'inline-block' }}>❤️</span>
           </div>
 
-          <a
-            href="#contador"
+          <button
             className="enter-btn"
+            onClick={() => {
+              setEntered(true)
+
+              setTimeout(() => {
+                window.scrollTo({
+                  top: window.innerHeight,
+                  behavior: 'smooth',
+                })
+              }, 1200)
+            }}
             style={{
               display: 'inline-block',
               padding: '18px 56px',
@@ -697,18 +724,23 @@ export default function App() {
               fontSize: 12,
               letterSpacing: '0.3em',
               textTransform: 'uppercase',
-              textDecoration: 'none',
+              border: 'none',
+              cursor: 'pointer',
               animation: 'fadeInUp 1s ease 1s both',
               boxShadow: '0 8px 40px rgba(139,26,26,0.55)',
+              transition: 'all 0.4s ease',
+              transform: entered ? 'scale(1.08)' : 'scale(1)',
+              opacity: entered ? 0 : 1,
             }}
           >
             Entrar ↓
-          </a>
+          </button>
         </div>
 
         <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 220, background: `linear-gradient(to bottom, transparent, ${bg})`, pointerEvents: 'none', zIndex: 2 }} />
       </section>
 
+      {entered && (
       {/* ══════════════════════════════════════════
           CONTADOR AO VIVO
       ══════════════════════════════════════════ */}
@@ -730,7 +762,7 @@ export default function App() {
         </p>
 
         {/* Cards principais */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 14, maxWidth: 820, margin: '0 auto 56px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 14, maxWidth: '92vw', margin: '0 auto 56px' }}>
           {[
             { n: String(t.hours).padStart(2, '0'),   l: 'Horas',    delay: '0s' },
             { n: String(t.minutes).padStart(2, '0'), l: 'Minutos',  delay: '0.15s' },
@@ -878,7 +910,7 @@ export default function App() {
 
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
           gap: 16,
           maxWidth: 1200,
           margin: '0 auto',
@@ -1061,6 +1093,9 @@ export default function App() {
           Feito com muito amor
         </p>
       </footer>
+
+      )}
+
     </div>
   )
 }
