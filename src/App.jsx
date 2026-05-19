@@ -1,3 +1,9 @@
+import foto1 from './assets/foto1.jpg'
+import foto2 from './assets/foto2.jpg'
+import foto3 from './assets/foto3.jpg'
+import foto4 from './assets/foto4.jpg'
+import foto5 from './assets/foto5.jpg'
+import foto6 from './assets/foto6.jpg'
 export default function RomanticWebsiteConcept() {
   return (
     <div className="min-h-screen bg-black text-white overflow-x-hidden">
@@ -109,9 +115,12 @@ export default function RomanticWebsiteConcept() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
           {[
-            'https://images.unsplash.com/photo-1522673607200-164d1b6ce486?q=80&w=1974&auto=format&fit=crop',
-            'https://images.unsplash.com/photo-1516589091380-5d8e87df6999?q=80&w=1974&auto=format&fit=crop',
-            'https://images.unsplash.com/photo-1518199266791-5375a83190b7?q=80&w=1974&auto=format&fit=crop',
+            foto1,
+            foto2,
+            foto3,
+            foto4,
+            foto5,
+            foto6,
           ].map((src, index) => (
             <div
               key={index}
