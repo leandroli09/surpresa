@@ -11,17 +11,17 @@ import foto6 from './assets/foto6.jpg'
 // ╚══════════════════════════════════════════════════════════════╝
 const CONFIG = {
   // Nomes do casal
-  nomeDele: 'Seu Nome',
-  nomeDela: 'Nome Dela',
+  nomeDele: 'Leandro',
+  nomeDela: 'Beatriz',
 
   // Data de início do namoro (YYYY-MM-DD)
-  dataAniversario: '2025-05-31',
+  dataAniversario: '2025-05-31T22:00:00',
   dataExibicao: '31 de Maio de 2025',
 
   // Música — coloque o arquivo em /src/assets/musica.mp3
   musicaUrl: './assets/musica.mp3',
-  musicaNome: 'Nossa Música',
-  musicaArtista: 'Artista',
+  musicaNome: 'O Que É Que Tem',
+  musicaArtista: 'Jorge & Mateus',
 
   // Linha do tempo
   timeline: [
@@ -352,8 +352,8 @@ function useCountup(dateStr) {
 // ─────────────────────────────────────────────────────────────
 // Player de música
 // ─────────────────────────────────────────────────────────────
-function MusicPlayer({ url, nome, artista }) {
-  const audioRef = useRef(null)
+function MusicPlayer({ url, nome, artista, externalAudioRef }) {
+  const audioRef = externalAudioRef || useRef(null)
   const [playing, setPlaying] = useState(false)
   const [progress, setProgress] = useState(0)
   const [duration, setDuration] = useState(0)
@@ -557,6 +557,7 @@ function Lightbox({ src, onClose }) {
 // ─────────────────────────────────────────────────────────────
 export default function App() {
   const [entered, setEntered] = useState(false)
+  const audioRef = useRef(null)
   const t = useCountup(CONFIG.dataAniversario)
   const [lightbox, setLightbox] = useState(null)
 
@@ -707,6 +708,11 @@ export default function App() {
             onClick={() => {
               setEntered(true)
 
+              if (audioRef.current) {
+                audioRef.current.volume = 0.35
+                audioRef.current.play().catch(() => console.log('Autoplay bloqueado'))
+              }
+
               setTimeout(() => {
                 window.scrollTo({
                   top: window.innerHeight,
@@ -812,7 +818,12 @@ export default function App() {
       <section style={{ padding: '110px 24px', textAlign: 'center', background: '#0a0608' }}>
         {sectionLabel('Nossa Música')}
         {sectionTitle('A trilha sonora da nossa história.', { marginBottom: 64 })}
-        <MusicPlayer url={CONFIG.musicaUrl} nome={CONFIG.musicaNome} artista={CONFIG.musicaArtista} />
+        <MusicPlayer
+          url={CONFIG.musicaUrl}
+          nome={CONFIG.musicaNome}
+          artista={CONFIG.musicaArtista}
+          externalAudioRef={audioRef}
+        />
       </section>
 
       {/* ══════════════════════════════════════════
