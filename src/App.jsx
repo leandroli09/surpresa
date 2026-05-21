@@ -5,6 +5,7 @@ import foto3 from './assets/foto3.jpg'
 import foto4 from './assets/foto4.jpg'
 import foto5 from './assets/foto5.jpg'
 import foto6 from './assets/foto6.jpg'
+import musicaSrc from './assets/musica.mp3'
 
 // ╔══════════════════════════════════════════════════════════════╗
 // ║         ⚙️  CONFIGURAÇÕES — edite aqui para personalizar     ║
@@ -19,7 +20,7 @@ const CONFIG = {
   dataExibicao: '31 de Maio de 2025',
 
   // Música — coloque o arquivo em /src/assets/musica.mp3
-  musicaUrl: './assets/musica.mp3',
+  musicaUrl: musicaSrc,
   musicaNome: 'O Que É Que Tem',
   musicaArtista: 'Jorge & Mateus',
 
@@ -359,6 +360,23 @@ function MusicPlayer({ url, nome, artista, externalAudioRef }) {
   const [duration, setDuration] = useState(0)
   const [volume, setVolume] = useState(0.75)
 
+  useEffect(() => {
+    const audio = audioRef.current
+    if (!audio) return
+    audio.addEventListener('timeupdate', onTime)
+    audio.addEventListener('loadedmetadata', onMeta)
+    audio.addEventListener('play', () => setPlaying(true))
+    audio.addEventListener('pause', () => setPlaying(false))
+    audio.addEventListener('ended', () => setPlaying(false))
+    return () => {
+      audio.removeEventListener('timeupdate', onTime)
+      audio.removeEventListener('loadedmetadata', onMeta)
+      audio.removeEventListener('play', () => setPlaying(true))
+      audio.removeEventListener('pause', () => setPlaying(false))
+      audio.removeEventListener('ended', () => setPlaying(false))
+    }
+  }, [])
+
   const toggle = () => {
     if (!audioRef.current) return
     playing ? audioRef.current.pause() : audioRef.current.play()
@@ -397,14 +415,6 @@ function MusicPlayer({ url, nome, artista, externalAudioRef }) {
         margin: '0 auto',
       }}
     >
-      <audio
-        ref={audioRef}
-        src={url}
-        onTimeUpdate={onTime}
-        onLoadedMetadata={onMeta}
-        onEnded={() => setPlaying(false)}
-        loop
-      />
 
       {/* Disco + título */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 20, marginBottom: 32 }}>
@@ -607,6 +617,12 @@ export default function App() {
     >
       <style>{GLOBAL_STYLES}</style>
       <div className="grain-overlay" />
+
+      <audio
+        ref={audioRef}
+        src={CONFIG.musicaUrl}
+        loop
+      />
 
       {lightbox !== null && (
         <Lightbox src={fotos[lightbox]} onClose={() => setLightbox(null)} />
